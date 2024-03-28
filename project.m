@@ -15,7 +15,6 @@ Em5_pos = enemy(5,1:2);
 %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
 ally = -1+(1-(-1)).*rand(5, 2);
 %disp(ally);
-
 % 为每个友军分配一个名字
 al1 = ally(1, :);
 al2 = ally(2, :);
@@ -26,21 +25,23 @@ al5 = ally(5, :);
 %计算适应度，cost1每行记录的是对于第a个敌人，我方最小距离及对应的我单位索引
 %距离dis1 = norm(al1-Em1_pos);
 %distance = [1,2,3,4,5];
-for a=1:5
+function cost1 = findCost(ally,enemy)
+    for a=1:5
     emCurrent = enemy(a,1:2);%即Em_pos
-    for i=1:5
-    distance(a,i)=norm(ally(i,:)-emCurrent);
-    %%disp(distance);
-    [M,N] = min(distance(a,:));
-    cost1(a,1)=M;
-    cost1(a,2)=N;
-    disp(cost1);
-    end
+        for i=1:5
+        distance(a,i)=norm(ally(i,:)-emCurrent);
+        %%disp(distance);
+        [M,N] = min(distance(a,:));%M和N分别对应着最小距离和对应的我单位索引，分别存入cost1的第1、2列
+        cost1(a,1)=M;
+        cost1(a,2)=N;
+        disp(cost1);
+        end
     cost1(a,1) = cost1(a,1) - enemy(a,3);
+    end
+    disp(cost1);
 end
-disp(cost1);
 
-function [bestX, bestF] = wolf_pack_algorithm(lb, ub, dim, max_gen, pop_size, alpha, beta, delta)
+function [bestX, bestF] = wolf_pack_algorithm(ally,enemy,max_gen,alpha, beta, delta)
 % fitness_func - 适应度函数
 % lb - 自变量下界
 % ub - 自变量上界
@@ -51,11 +52,18 @@ function [bestX, bestF] = wolf_pack_algorithm(lb, ub, dim, max_gen, pop_size, al
 % beta - 狼群更新常数
 % delta - 狼群更新常数
     % 初始化种群
-    pop = create_population(lb, ub, dim, pop_size);
+    pop = ally;
+    pop_size = size(ally,1);%pop_size = 5
+    dim = 2;
+    %%pop = create_population(lb, ub, dim, pop_size);
     % 计算适应度
-    fitness = evaluate_fitness(pop, pop_size);
+    %%fitness = evaluate_fitness(pop, pop_size);
+    fitness = findCost(ally,enemy);
     % 寻找最优解
-    [bestF, bestIdx] = min(fitness);
+    %%[bestF, bestIdx] = min(fitness);
+    best = min(cost);
+    bestF = best(1,1);
+    bestIdx = best(1,2);
     bestX = pop(bestIdx, :);
     % 迭代优化
     for gen = 1:max_gen
@@ -71,7 +79,7 @@ function [bestX, bestF] = wolf_pack_algorithm(lb, ub, dim, max_gen, pop_size, al
                     C = 2 * r2;
                     D = abs(C .* bestX - pop(i, :));
                     X1 = bestX - A .* D;
-                    fitness_X1 = evaluate_fitness( X1, 1);
+                    fitness_X1 = evaluate_fitness( X1, 1);%！存疑
                     % 更新最优解
                     if fitness_X1 < bestF
                         bestF = fitness_X1;
@@ -82,10 +90,10 @@ function [bestX, bestF] = wolf_pack_algorithm(lb, ub, dim, max_gen, pop_size, al
                         pop(i, :) = X1;
                         fitness_i = fitness_X1;
                     else
-                        r3 = rand;
+                        r3 = rand;%！存疑，为什么要用一个随机的值和beta作比较？有什么意义呢？
                         if r3 < beta
                             X2 = pop(j, :) + delta * (rand(1, dim) - 0.5);
-                            fitness_X2 = evaluate_fitness( X2, 1);
+                            fitness_X2 = evaluate_fitness( X2, 1);%！存疑
                             % 更新最优解
                             if fitness_X2 < bestF
                                 bestF = fitness_X2;
@@ -103,21 +111,22 @@ function [bestX, bestF] = wolf_pack_algorithm(lb, ub, dim, max_gen, pop_size, al
         end
     end
 end
+
 % 初始化种群
-function pop = create_population(lb, ub, dim, pop_size)
-    pop = repmat(lb, pop_size, 1) + rand(pop_size, dim) .* repmat((ub - lb), pop_size, 1);
-end
+%%function pop = create_population(lb, ub, dim, pop_size)
+%%    pop = repmat(lb, pop_size, 1) + rand(pop_size, dim) .* repmat((ub - lb), pop_size, 1);
+%%end
+
 % 计算适应度
 function fitness = evaluate_fitness( pop, pop_size)
     fitness = zeros(pop_size, 1);
     for i = 1:pop_size
         fitness(i) = norm(pop(i, :));
         %distance(i)=norm(pop(i,:));
-
     end
 end
 
-function cost = A_star(start,goal,obmap)
+function cost_A = A_star(start,goal,obmap)
     dim = size(obmap);
     % Grids(i,j,1) - x of parent pos; 2 - y of parent pos; 3 - precost; 4 -
     % postcost
@@ -138,5 +147,5 @@ function cost = A_star(start,goal,obmap)
         [Grids,Open,Close] = Update(wknode,goal,obmap,Grids,Open,Close);
         Close(end+1,:) = wknode;
     end
-    cost = Grids(goal(1),goal(2),3)+Grids(goal(1),goal(2),4);
+    cost_A = Grids(goal(1),goal(2),3)+Grids(goal(1),goal(2),4);
 end
