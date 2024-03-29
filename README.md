@@ -22,13 +22,13 @@
 Wolf Pack Algorithm，WPA
 以群体智能为基础的优化算法。设计一种基于狼群算法的多无人平台协同跟踪决策系统，以满足复杂战斗环境下的战略战术需求。根据相关战斗理论建立成本评估体系与对应的适应度函数，以此将狼群算法与实际问题相结合，进而利用狼群算法迭代计算得出最优策略。
 
-![狼群算法流程图](RM_img\XTYD201311034_05000.jpg)
+![狼群算法流程图](RM_img/XTYD201311034_05000.jpg)
 
 ### 使用A星算法进行路径规划，保证各无人平台能够按计划接近目标 The A-star algorithm is used for path planning to ensure that each unmanned platform can approach the target as planned
 
 是在已知的全局高精地图上，根据已知起点和目标点，规划出一条全局最优路径。A*算法是一种静态路网中求解最短路径最有效的直接搜索方法，对路径上每个节点进行检索时，它都会引入全局信息，对车辆路径点和目标点之间的距离进行估计。这是一种启发式搜索算法，具有计算方式简单、搜索速度快、环境适应力强以及规划的路径较短等优点。
 
-![A星算法流程图](RM_img\OIP-C.jpg)
+![A星算法流程图](RM_img/OIP-C.jpg)
 
 ### 最终利用仿真环境检验整体算法流程的可行性与鲁棒性 Finally, the simulation environment is used to test the feasibility and robustness of the overall algorithm process
 
