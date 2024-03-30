@@ -1,4 +1,4 @@
-function [bestX, bestF] = WPA(ally,enemy,max_gen,alpha, beta, delta)
+function [bestAlly_p, bestCost] = WPA(ally,enemy,max_gen,alpha, beta, delta)
 % fitness_func - 适应度函数
 % lb - 自变量下界
 % ub - 自变量上界
@@ -17,11 +17,11 @@ function [bestX, bestF] = WPA(ally,enemy,max_gen,alpha, beta, delta)
     %%fitness = evaluate_fitness(pop, pop_size);
     fitness = findCost(ally,enemy);
     % 寻找最优解
-    %%[bestF, bestIdx] = min(fitness);
+    %%[bestCost, bestAlly_i] = min(fitness);
     best = min(cost);
-    bestF = best(1,1);
-    bestIdx = best(1,2);
-    bestX = pop(bestIdx, :);
+    bestCost = best(1,1);
+    bestAlly_i = best(1,2);
+    bestAlly_p = pop(bestAlly_i, :);
     % 迭代优化
     for gen = 1:max_gen
         % 更新狼群位置
@@ -34,13 +34,13 @@ function [bestX, bestF] = WPA(ally,enemy,max_gen,alpha, beta, delta)
                     r2 = rand(1, dim);
                     A = alpha * (2 * r1 - 1);
                     C = 2 * r2;
-                    D = abs(C .* bestX - pop(i, :));
-                    X1 = bestX - A .* D;
-                    fitness_X1 = evaluate_fitness( X1, 1);%！存疑
+                    D = abs(C .* bestAlly_p - pop(i, :));
+                    X1 = bestAlly_p - A .* D;
+                    fitness_X1 = evaluate_fitness(X1, 1);%！存疑
                     % 更新最优解
-                    if fitness_X1 < bestF
-                        bestF = fitness_X1;
-                        bestX = X1;
+                    if fitness_X1 < bestCost
+                        bestCost = fitness_X1;
+                        bestAlly_p = X1;
                     end
                     % 更新狼群位置
                     if fitness_X1 < fitness_i
@@ -50,11 +50,11 @@ function [bestX, bestF] = WPA(ally,enemy,max_gen,alpha, beta, delta)
                         r3 = rand;%！存疑 为什么要用一个随机的值和beta作比较？有什么意义呢？
                         if r3 < beta
                             X2 = pop(j, :) + delta * (rand(1, dim) - 0.5);
-                            fitness_X2 = evaluate_fitness( X2, 1);%！存疑
+                            fitness_X2 = evaluate_fitness(X2, 1);%！存疑
                             % 更新最优解
-                            if fitness_X2 < bestF
-                                bestF = fitness_X2;
-                                bestX = X2;
+                            if fitness_X2 < bestCost
+                                bestCost = fitness_X2;
+                                bestAlly_p = X2;
                             end
                             % 更新狼群位置
                             if fitness_X2 < fitness_i
@@ -73,11 +73,13 @@ end
 %距离dis1 = norm(al1-Em1_pos);
 %distance = [1,2,3,4,5];
 function cost1 = findCost(ally,enemy)
-    distance = zeros(5,5);%变量似乎要更改每个循环迭代的大小。请考虑对速度进行预分配。
-    cost1 = zeros(5,2);
-    for a=1:5
+    [m,m1] = size(ally);
+    [n,n1] = size(enemy);
+    distance = zeros(n,m);%变量似乎要更改每个循环迭代的大小。请考虑对速度进行预分配。
+    cost1 = zeros(n,2);
+    for a=1:n
         em_a = enemy(a,1:2);%即Em_pos
-        for i=1:5
+        for i=1:m
             al_i = ally(i,:);
             distance(a,i)=norm(al_i-em_a);
             %disp(distance);%调试用
