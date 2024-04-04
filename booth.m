@@ -1,4 +1,5 @@
 function result = booth(x1,x2,ally,enemy)
+    bilixishu = 1.3;
     [b,~] = size(x1);
     result = zeros(b,1);
     for a = 1:b
@@ -11,6 +12,7 @@ function result = booth(x1,x2,ally,enemy)
         %disp(j);
         %disp(x1);
         %disp(x2);
-        result(a,1) = norm(ally(i,1:2) - enemy(j,1:2)) - (ally(i,3) - enemy(j,3));
+        result(a,1) = norm(ally(i,1:2) - enemy(j,1:2)) - bilixishu*(ally(i,3) - enemy(j,3));
     end
+    clear x11 x22 bilixishu
 end

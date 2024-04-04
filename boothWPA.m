@@ -1,4 +1,4 @@
-function [] = boothWPA(ally,enemy)
+function [pos1,pos2] = boothWPA(ally,enemy)
 % Booth function
 %booth = @(x1,x2) (x1+2*x2-7).^2 + (2*x1+x2-5).^2;
 %booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
@@ -12,17 +12,17 @@ view(0,-90)
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
-N = 20;
+N = 40;
 % number of dimensions 尺寸数
 D = 2;
 % maximum number of iterations 最大迭代次数
-kmax = 50; k=1;
+kmax = 80; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
 Lnear = 0.3; %0.08
 % max number of  iterations in scouting behaviour 侦察行为的最大迭代次数
-Tmax = 15; T=0;
+Tmax = 10; T=0;
 % population renewing proportional constant 人口更新比例常数
 beta = 2;
 % steps 步长
@@ -182,9 +182,13 @@ plot(best);
 hold on
 plot(worst); plot(avg);
 hold off
-ylim([0, 10])
+ylim([-5, 10])
 title("Best, worst and average fitness");
 xlabel("iterations","FontWeight", "bold"); ylabel("Fitness", "FontWeight", "bold");
 legend("Best", "Worst", "Average", "Location", "best");
 
+[an1,an2] = min(booth(m,n,ally,enemy));
+disp(an1);
+pos1 = ally(an2,1:2);
+pos2 = enemy(an2,1:2);
 end

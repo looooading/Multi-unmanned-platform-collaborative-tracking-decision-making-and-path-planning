@@ -9,5 +9,5 @@ function result = caesar(text, key)
             result(i,1) = text(1,i + key);
         end
     end
-    
+    clear len
 end
