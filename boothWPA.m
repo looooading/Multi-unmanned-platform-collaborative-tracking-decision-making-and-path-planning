@@ -4,8 +4,8 @@ function [pos1,pos2] = boothWPA(ally,enemy)
 %booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
 %disp(ally);
 %disp(enemy);
-sizeA = size(ally);
-sizeE = size(enemy);
+[sizeA,~] = size(ally);
+[sizeE,~] = size(enemy);
 plotfn([1,sizeA],[1,sizeE],ally,enemy);
 plotfn([1,sizeA],[1,sizeE],ally,enemy);
 view(0,-90)
@@ -182,7 +182,7 @@ plot(best);
 hold on
 plot(worst); plot(avg);
 hold off
-ylim([-5, 10])
+ylim([0, 120])
 title("Best, worst and average fitness");
 xlabel("iterations","FontWeight", "bold"); ylabel("Fitness", "FontWeight", "bold");
 legend("Best", "Worst", "Average", "Location", "best");
@@ -191,4 +191,7 @@ legend("Best", "Worst", "Average", "Location", "best");
 disp(an1);
 pos1 = ally(an2,1:2);
 pos2 = enemy(an2,1:2);
+
+
+clear sizeE sizeA N D k kmax S step stepa stepb stepc x1new x1old x2new x2old Lnear R Rmax Rmin xmin xmax T Tmax
 end

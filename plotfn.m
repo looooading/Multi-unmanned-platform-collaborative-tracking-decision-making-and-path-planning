@@ -1,11 +1,11 @@
 function plotfn(xlim, ylim,ally,enemy)
     % plotting function
     figure;
-    [ptsx, ptsy] = meshgrid(linspace(xlim(1),xlim(2),50), linspace(ylim(1),ylim(2),50));
+    [ptsx, ptsy] = meshgrid(linspace(xlim(1),xlim(2),100), linspace(ylim(1),ylim(2),100));
     %disp(ptsx);disp(ptsy);
-    ptsx1 = zeros(50,1);
+    ptsx1 = zeros(100,1);
     %ptsx(1,51:99) = 0;disp(ptsx(1,:));
-    for a = 1:50
+    for a = 1:100
         ptsx1(:,a) = caesar(ptsx(1,:),a-1);
         %ptsx1(i,1) = ptsx(1,i+a-1);
         fn_vals(:,a) = booth(ptsx1(:,a),ptsy(:,1),ally,enemy);

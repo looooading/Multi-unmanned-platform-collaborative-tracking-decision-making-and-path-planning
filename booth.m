@@ -1,5 +1,5 @@
 function result = booth(x1,x2,ally,enemy)
-    bilixishu = 1.3;
+    bilixishu = 10;
     [b,~] = size(x1);
     result = zeros(b,1);
     for a = 1:b
