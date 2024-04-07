@@ -16,11 +16,11 @@ function plotfn(xlim, ylim,ally,enemy)
     [min_val] = min(fn_vals,[], "all");
     [max_val] = max(fn_vals,[], "all");
     %disp(fn_vals);
-    mesh(ptsx ,ptsy, fn_vals);
+    mesh(ptsx1 ,ptsy, fn_vals);
     colormap default; colorbar
     hold on
-    plot3(ptsx(fn_vals == min_val),ptsy(fn_vals == min_val), fn_vals(fn_vals == min_val), "xr");
-    plot3(ptsx(fn_vals == max_val),ptsy(fn_vals == max_val), fn_vals(fn_vals == max_val), "xg");
+    plot3(ptsx1(fn_vals == min_val),ptsy(fn_vals == min_val), fn_vals(fn_vals == min_val), "xr");
+    plot3(ptsx1(fn_vals == max_val),ptsy(fn_vals == max_val), fn_vals(fn_vals == max_val), "xg");
     title("f(x)");
     xlabel("x","FontWeight", "bold"); ylabel("y", "FontWeight", "bold"); zlabel("f(x)", "FontWeight", "bold");
     legend("function", "Min value", "Max value", "Location", "best");

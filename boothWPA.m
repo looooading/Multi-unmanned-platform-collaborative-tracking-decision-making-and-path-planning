@@ -12,11 +12,11 @@ view(0,-90)
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
-N = 40;
+N = 20;
 % number of dimensions 尺寸数
 D = 2;
 % maximum number of iterations 最大迭代次数
-kmax = 80; k=1;
+kmax = 20; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
@@ -26,7 +26,7 @@ Tmax = 10; T=0;
 % population renewing proportional constant 人口更新比例常数
 beta = 2;
 % steps 步长
-stepa = S; stepb = 2*S; stepc = S/2;
+stepa = S; stepb = 2.2*S; stepc = S/2;
 % h limits
 hmin = 10; hmax= 20;
 % R to delete wolves from end
@@ -61,7 +61,7 @@ while k<kmax
 
             step=2;
         elseif step==2
-            % scouting
+            % scouting 侦查
             brkfl = 1;
             while T<Tmax && brkfl
                 for i=1:N
@@ -99,7 +99,7 @@ while k<kmax
             end
             step=3;
         elseif step==3
-            % Calling
+            % Calling 召唤
             distfl = 1;
             while distfl
                 moveable_wolves = [];
@@ -134,7 +134,7 @@ while k<kmax
                 step=4;
             end
         elseif step==4
-            % Besieging
+            % Besieging 围攻
             for i=1:N
                 if i~=idx_lead
                     x1old = X(i,1); x2old = X(i,2);
@@ -155,7 +155,7 @@ while k<kmax
             end
             step=5;
         elseif step==5
-            % stronger surviving renewing
+            % stronger surviving renewing 更强大的生存更新
             fitness = booth(X(:,1),X(:,2),ally,enemy);
             [~, idx_sorted] = sort(fitness, "descend");
             R = randi([Rmin, Rmax], 1);
