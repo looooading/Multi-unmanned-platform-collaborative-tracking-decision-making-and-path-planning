@@ -1,4 +1,4 @@
-function [pos1,pos2] = boothWPA(ally,enemy)
+function [name1,name2] = boothWPA(ally,enemy)
 % Booth function
 %booth = @(x1,x2) (x1+2*x2-7).^2 + (2*x1+x2-5).^2;
 %booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
@@ -189,8 +189,10 @@ legend("Best", "Worst", "Average", "Location", "best");
 
 [an1,an2] = min(booth(m,n,ally,enemy));
 disp(an1);
-pos1 = ally(an2,1:2);
-pos2 = enemy(an2,1:2);
+name1 = round(X(an2,1));
+name2 = round(X(an2,2));
+disp(name1);
+disp(name2);
 
 
 clear sizeE sizeA N D k kmax S step stepa stepb stepc x1new x1old x2new x2old Lnear R Rmax Rmin xmin xmax T Tmax
