@@ -12,21 +12,21 @@ view(0,-90)
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
-N = 20;
+N = 40;
 % number of dimensions 尺寸数
 D = 2;
 % maximum number of iterations 最大迭代次数
-kmax = 20; k=1;
+kmax = 10; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
 Lnear = 0.3; %0.08
 % max number of  iterations in scouting behaviour 侦察行为的最大迭代次数
-Tmax = 10; T=0;
+Tmax = 12; T=0;
 % population renewing proportional constant 人口更新比例常数
 beta = 2;
 % steps 步长
-stepa = S; stepb = 2.2*S; stepc = S/2;
+stepa = S; stepb = 2.5*S; stepc = S/2;
 % h limits
 hmin = 10; hmax= 20;
 % R to delete wolves from end
