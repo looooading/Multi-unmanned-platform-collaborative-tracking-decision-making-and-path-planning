@@ -1,11 +1,20 @@
 function A_star_1(ally_pos,enemy_pos,MAP)
+    
+    %更改数量级，以适配后续执行
+    ally_pos = ally_pos .* 100;
+    enemy_pos = enemy_pos .* 100;
+    [map_x_size, map_y_size] = size(MAP);
+    map_x_size = map_x_size * 100;
+    map_y_size = map_y_size * 100;
+    MAP = single(zeros(map_x_size,map_y_size));
+
     %Start Positions
     StartX=ally_pos(1,1);
     StartY=ally_pos(1,2);
     
     %Generating goal nodes, which is represented by a matrix. Several goals can be speciefied, in which case the pathfinder will find the closest goal. 
     %a cell with the value 1 represent a goal cell
-    GoalRegister=int8(zeros(128,128));
+    GoalRegister=single(zeros(map_x_size,map_y_size));
     GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
     
     %Number of Neighboors one wants to investigate from each cell. A larger
@@ -14,7 +23,7 @@ function A_star_1(ally_pos,enemy_pos,MAP)
     %Connecting_Distance=2-> Path can be alligned along 16 different direction.
     %ETC......
     
-    Connecting_Distance=8; %Avoid to high values Connecting_Distances for reasonable runtimes. 
+    Connecting_Distance=1; %Avoid to high values Connecting_Distances for reasonable runtimes. 
     % Running PathFinder
     OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance)
     % End. 
@@ -52,8 +61,8 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
     GScore=zeros(Height,Width);           %Matrix keeping track of G-scores 
     FScore=single(inf(Height,Width));     %Matrix keeping track of F-scores (only open list) 
     Hn=single(zeros(Height,Width));       %Heuristic matrix
-    OpenMAT=int8(zeros(Height,Width));    %Matrix keeping of open grid cells
-    ClosedMAT=int8(zeros(Height,Width));  %Matrix keeping track of closed grid cells
+    OpenMAT=single(zeros(Height,Width));    %Matrix keeping of open grid cells
+    ClosedMAT=single(zeros(Height,Width));  %Matrix keeping track of closed grid cells
     ClosedMAT(MAP==1)=1;                  %Adding object-cells to closed matrix
     ParentX=int16(zeros(Height,Width));   %Matrix keeping track of X position of parent
     ParentY=int16(zeros(Height,Width));   %Matrix keeping track of Y position of parent
