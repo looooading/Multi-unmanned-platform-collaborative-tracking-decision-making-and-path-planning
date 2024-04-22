@@ -1,11 +1,11 @@
 function A_star_1(ally_pos,enemy_pos,MAP)
     
     %更改数量级，以适配后续执行
-    ally_pos = ally_pos .* 100;
-    enemy_pos = enemy_pos .* 100;
+    ally_pos = single(ally_pos .* 10);
+    enemy_pos = single(enemy_pos .* 10);
     [map_x_size, map_y_size] = size(MAP);
-    map_x_size = map_x_size * 100;
-    map_y_size = map_y_size * 100;
+    map_x_size = map_x_size * 10;
+    map_y_size = map_y_size * 10;
     MAP = single(zeros(map_x_size,map_y_size));
 
     %Start Positions
@@ -15,7 +15,7 @@ function A_star_1(ally_pos,enemy_pos,MAP)
     %Generating goal nodes, which is represented by a matrix. Several goals can be speciefied, in which case the pathfinder will find the closest goal. 
     %a cell with the value 1 represent a goal cell
     GoalRegister=single(zeros(map_x_size,map_y_size));
-    GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
+    disp(enemy_pos);GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
     
     %Number of Neighboors one wants to investigate from each cell. A larger
     %number of nodes means that the path can be alligned in more directions. 
@@ -23,19 +23,19 @@ function A_star_1(ally_pos,enemy_pos,MAP)
     %Connecting_Distance=2-> Path can be alligned along 16 different direction.
     %ETC......
     
-    Connecting_Distance=1; %Avoid to high values Connecting_Distances for reasonable runtimes. 
+    Connecting_Distance=2; %Avoid to high values Connecting_Distances for reasonable runtimes. 
     % Running PathFinder
-    OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance)
+    OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance);
     % End. 
-    
+    figure(10)
     if size(OptimalPath,2)>1
-        figure(10)
+        %figure(10)
         imagesc((MAP))
         colormap(flipud(gray));
         
         hold on
         plot(OptimalPath(1,2),OptimalPath(1,1),'o','color','k')
-        plot(OptimalPath(end,2),OptimalPath(end,1),'o','color','b')
+        plot(OptimalPath(end,2),OptimalPath(end,1),'^','color','b')
         plot(OptimalPath(:,2),OptimalPath(:,1),'r')
         legend('Goal','Start','Path')
         
