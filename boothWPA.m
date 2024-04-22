@@ -6,7 +6,7 @@ function [name1,name2] = boothWPA(ally,enemy)
 %disp(enemy);
 [sizeA,~] = size(ally);
 [sizeE,~] = size(enemy);
-plotfn([1,sizeA],[1,sizeE],ally,enemy);
+%plotfn([1,sizeA],[1,sizeE],ally,enemy);
 plotfn([1,sizeA],[1,sizeE],ally,enemy);
 view(0,-90)
 
@@ -188,7 +188,7 @@ xlabel("iterations","FontWeight", "bold"); ylabel("Fitness", "FontWeight", "bold
 legend("Best", "Worst", "Average", "Location", "best");
 
 [an1,an2] = min(booth(m,n,ally,enemy));
-disp(an1);
+%disp(an1);
 name1 = round(X(an2,1));
 name2 = round(X(an2,2));
 disp(name1);
