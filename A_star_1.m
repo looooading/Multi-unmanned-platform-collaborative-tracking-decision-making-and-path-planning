@@ -1,4 +1,4 @@
-function A_star_1(ally_pos,enemy_pos,MAP)
+function OptimalPath = A_star_1(ally_pos,enemy_pos,MAP)
     
     %更改数量级，以适配后续执行
     ally_pos = single(ally_pos .* 10);
@@ -15,7 +15,7 @@ function A_star_1(ally_pos,enemy_pos,MAP)
     %Generating goal nodes, which is represented by a matrix. Several goals can be speciefied, in which case the pathfinder will find the closest goal. 
     %a cell with the value 1 represent a goal cell
     GoalRegister=single(zeros(map_x_size,map_y_size));
-    disp(enemy_pos);GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
+    GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
     
     %Number of Neighboors one wants to investigate from each cell. A larger
     %number of nodes means that the path can be alligned in more directions. 
@@ -27,18 +27,19 @@ function A_star_1(ally_pos,enemy_pos,MAP)
     % Running PathFinder
     OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance);
     % End. 
-    figure(10)
+    %figure(10)
     if size(OptimalPath,2)>1
-        %figure(10)
+        disp('Path found!')
+        %{
+        figure(10)
         imagesc((MAP))
         colormap(flipud(gray));
-        
         hold on
         plot(OptimalPath(1,2),OptimalPath(1,1),'o','color','k')
         plot(OptimalPath(end,2),OptimalPath(end,1),'^','color','b')
         plot(OptimalPath(:,2),OptimalPath(:,1),'r')
         legend('Goal','Start','Path')
-        
+        %}
     else 
         pause(1);
         h=msgbox('Sorry, No path exists to the Target!','warn');

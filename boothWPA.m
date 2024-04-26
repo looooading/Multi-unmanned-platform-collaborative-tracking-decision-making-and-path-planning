@@ -7,8 +7,8 @@ function [name1,name2] = boothWPA(ally,enemy)
 [sizeA,~] = size(ally);
 [sizeE,~] = size(enemy);
 %plotfn([1,sizeA],[1,sizeE],ally,enemy);
-plotfn([1,sizeA],[1,sizeE],ally,enemy);
-view(0,-90)
+%plotfn([1,sizeA],[1,sizeE],ally,enemy);
+%view(0,-90)
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
@@ -16,7 +16,7 @@ N = 40;
 % number of dimensions 尺寸数
 D = 2;
 % maximum number of iterations 最大迭代次数
-kmax = 10; k=1;
+kmax = 5; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
@@ -38,9 +38,9 @@ xmax = sizeA;
 X = (xmax-xmin).*rand(N,D) + xmin;
 %%X = randi(xmax,N,D);
 m = X(:,1); n = X(:,2);
-hold on
-p = plot(m, n, "or");
-hold off
+%hold on
+%p = plot(m, n, "or");
+%hold off
 
 p.XDataSource = 'm';
 p.YDataSource = 'n';
@@ -173,10 +173,12 @@ while k<kmax
     fprintf("iteration: %d\n", k)
 end
 m = X(:,1); n = X(:,2);
-hold on
-plot(m, n, "^b");
-hold off
+%hold on
+%plot(m, n, "^b");
+%hold off
 %%% Plotting fitness over time
+
+%{
 figure;
 plot(best);
 hold on
@@ -186,13 +188,14 @@ ylim([0, 120])
 title("Best, worst and average fitness");
 xlabel("iterations","FontWeight", "bold"); ylabel("Fitness", "FontWeight", "bold");
 legend("Best", "Worst", "Average", "Location", "best");
+%}
 
 [an1,an2] = min(booth(m,n,ally,enemy));
 %disp(an1);
 name1 = round(X(an2,1));
 name2 = round(X(an2,2));
-disp(name1);
-disp(name2);
+%disp(name1);
+%disp(name2);
 
 
 clear sizeE sizeA N D k kmax S step stepa stepb stepc x1new x1old x2new x2old Lnear R Rmax Rmin xmin xmax T Tmax

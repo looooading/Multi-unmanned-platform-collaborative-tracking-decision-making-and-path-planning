@@ -14,5 +14,5 @@ function result = booth(x1,x2,ally,enemy)
         %disp(x2);
         result(a,1) = norm(ally(i,1:2) - enemy(j,1:2)) - bilixishu*(ally(i,3) - enemy(j,3));
     end
-    clear x11 x22 bilixishu
+    clear x11 x22 bilixishu a b i j 
 end

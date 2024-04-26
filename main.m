@@ -34,7 +34,7 @@ function main()
 
     %初始化结果策略表格chart
     chart = zeros(army_size,2);
-
+    OptimalPath = zeros(0,2);
     for i = 1:army_size
         %调用WPA
         [name1,name2] = boothWPA(ally,enemy);
@@ -42,17 +42,35 @@ function main()
         posE = single(enemy(name2,1:2));%disp(posE);
 
         %记录策略写入chart中
-        [row_a,~] = find(ally_backup == posA(1,1));
-        [row_e,~] = find(enemy_backup == posE(1,1));
+        row_a = find(all(ally_backup(:,1:2) == posA(1,:),2));
+        row_e = find(all(enemy_backup(:,1:2) == posE(1,:),2));
         chart(i,1) = row_a;
         chart(i,2) = row_e;
 
         %路径规划部分
-        A_star_1(posA,posE,map);
-        %disp(cost_A);
+        Path = A_star_1(posA,posE,map);
+        Path_size(i,:) = size(Path);
+        OptimalPath = [OptimalPath;Path;];
+
         ally(name1,:) = [];
         enemy(name2,:) = [];
         clear name1 name2 posA posE row_a row_e;
     end
+
+%%%展示环节
+
     disp(chart);
+    OptimalPath = OptimalPath.*0.1;
+    figure
+    hold on;
+    imagesc((map))
+    colormap(flipud(gray))
+    start = 1;
+    for j = 1:army_size
+        plot(OptimalPath(start,2),OptimalPath(start,1),'o','color','k')
+        plot(OptimalPath(Path_size(j,1),2),OptimalPath(Path_size(j,1),1),'^','color','b')
+        plot(OptimalPath(start:Path_size(j,1),2),OptimalPath(start:Path_size(j,1),1),'r')
+        legend('Goal','Start','Path')
+        start = Path_size(j,1)+1;
+    end
 end
