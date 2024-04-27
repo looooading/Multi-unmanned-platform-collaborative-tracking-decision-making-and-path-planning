@@ -1,7 +1,12 @@
 function main()
 %%% 相关参数初始化
     disp(fileread('Marx_Engels_Lenin_ASCIIBanner.txt'));
-    map = single(zeros(50,50));
+    map = single(zeros(500,500));
+    map(100:200,240:260) = 1;
+    map(300:400,240:260) = 1;
+    map(240:260,100:200) = 1;
+    map(240:260,300:400) = 1;
+    map(245:255,245:255) = 1;
     army_size = 3;%对称对抗，双方army_size相同
     decimal = 1;
 
@@ -38,8 +43,8 @@ function main()
     for i = 1:army_size
         %调用WPA
         [name1,name2] = boothWPA(ally,enemy);
-        posA = single(ally(name1,1:2));%disp(posA);
-        posE = single(enemy(name2,1:2));%disp(posE);
+        posA = single(ally(name1,1:2));disp(posA);
+        posE = single(enemy(name2,1:2));disp(posE);
 
         %记录策略写入chart中
         row_a = find(all(ally_backup(:,1:2) == posA(1,:),2));
@@ -54,23 +59,24 @@ function main()
 
         ally(name1,:) = [];
         enemy(name2,:) = [];
-        clear name1 name2 posA posE row_a row_e;
+        clear name1 name2 posA posE row_a row_e Path;
     end
 
 %%%展示环节
 
     disp(chart);
-    OptimalPath = OptimalPath.*0.1;
+    %OptimalPath = OptimalPath.*0.1;
+    %map = map.*0.1;
     figure
     hold on;
     imagesc((map))
     colormap(flipud(gray))
     start = 1;
     for j = 1:army_size
-        plot(OptimalPath(start,2),OptimalPath(start,1),'o','color','k')
-        plot(OptimalPath(Path_size(j,1),2),OptimalPath(Path_size(j,1),1),'^','color','b')
-        plot(OptimalPath(start:Path_size(j,1),2),OptimalPath(start:Path_size(j,1),1),'r')
+        plot(OptimalPath(start,1),OptimalPath(start,2),'o','color','k')
+        plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color','b')
+        plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'r')
         legend('Goal','Start','Path')
-        start = Path_size(j,1)+1;
+        start = Path_size(j,1) + start;
     end
 end

@@ -42,8 +42,8 @@ m = X(:,1); n = X(:,2);
 %p = plot(m, n, "or");
 %hold off
 
-p.XDataSource = 'm';
-p.YDataSource = 'n';
+%p.XDataSource = 'm';
+%p.YDataSource = 'n';
 
 %%% starting iterations
 while k<kmax

@@ -4,17 +4,17 @@ function OptimalPath = A_star_1(ally_pos,enemy_pos,MAP)
     ally_pos = single(ally_pos .* 10);
     enemy_pos = single(enemy_pos .* 10);
     [map_x_size, map_y_size] = size(MAP);
-    map_x_size = map_x_size * 10;
-    map_y_size = map_y_size * 10;
-    MAP = single(zeros(map_x_size,map_y_size));
+    %map_x_size = map_x_size * 10;
+    %map_y_size = map_y_size * 10;
+    %MAP = single(zeros(map_x_size,map_y_size));
 
     %Start Positions
-    StartX=ally_pos(1,1);
-    StartY=ally_pos(1,2);
+    StartX=ally_pos(1,2);
+    StartY=ally_pos(1,1);
     
     %Generating goal nodes, which is represented by a matrix. Several goals can be speciefied, in which case the pathfinder will find the closest goal. 
     %a cell with the value 1 represent a goal cell
-    GoalRegister=single(zeros(map_x_size,map_y_size));
+    GoalRegister = single(zeros(map_x_size,map_y_size));
     GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
     
     %Number of Neighboors one wants to investigate from each cell. A larger
