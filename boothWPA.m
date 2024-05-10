@@ -89,7 +89,7 @@ while k<kmax
                             if k == 1 && sizeA > 2
                                 refreshdata(p,'caller')
                                 drawnow
-                                legend(p,'侦查环节')
+                                legend(p,'侦查环节的狼群位置')
                             end
                         end
                         if booth(X(i,1),X(i,2),ally,enemy)<lead
@@ -127,7 +127,7 @@ while k<kmax
                     if k == 1 && sizeA > 2
                         refreshdata(p,'caller')
                         drawnow
-                        legend(p,'召唤环节')
+                        legend(p,'召唤环节的狼群位置')
                     end
                     if booth(X(moveable_wolves(i),1), X(moveable_wolves(i),2),ally,enemy)<lead
                         lead = booth(X(moveable_wolves(i),1), X(moveable_wolves(i),2),ally,enemy);
@@ -155,7 +155,7 @@ while k<kmax
                         if k == 1 && sizeA > 2
                             refreshdata(p,'caller')
                             drawnow
-                            legend(p,'围攻环节')
+                            legend(p,'围攻环节的狼群位置')
                         end
                         if booth(x1new, x2new,ally,enemy)<lead
                             lead = booth(x1new, x2new,ally,enemy);
@@ -167,6 +167,12 @@ while k<kmax
             step=5;
         elseif step==5
             % stronger surviving renewing 更强大的生存更新
+            [sizeX,~] = size(X);
+            for s = 1:sizeX
+                if X(s,1) > 3 || X(s,2) > 3 || X(s,1) < 1 || X(s,2) < 1
+                    X(s,:) = [1,1];
+                end
+            end
             fitness = booth(X(:,1),X(:,2),ally,enemy);
             [~, idx_sorted] = sort(fitness, "descend");
             R = randi([Rmin, Rmax], 1);
@@ -177,7 +183,7 @@ while k<kmax
                     if k == 1 && sizeA > 2
                         refreshdata(p,'caller')
                         drawnow
-                        legend(p,'种群更新环节')
+                        legend(p,'种群更新环节的狼群位置')
                     end
             end
             overfl=1;
@@ -186,14 +192,17 @@ while k<kmax
     k = k + 1;
     fprintf("iteration: %d\n", k)
 end
-m = X(:,1); n = X(:,2);
-%hold on
-%plot(m, n, "^b");
-%hold off
+if sizeA > 2
+    m = X(:,1); n = X(:,2);
+    hold on
+    result = plot(m, n, "^b");
+    legend(result,"最终狼群位置")
+    hold off
+end
 %%% Plotting fitness over time
 
 if sizeA > 2
-    figure;
+    figure
     plot(best);
     hold on
     plot(worst); plot(avg);
