@@ -6,9 +6,11 @@ function [name1,name2] = boothWPA(ally,enemy)
 %disp(enemy);
 [sizeA,~] = size(ally);
 [sizeE,~] = size(enemy);
-%plotfn([1,sizeA],[1,sizeE],ally,enemy);
-%plotfn([1,sizeA],[1,sizeE],ally,enemy);
-%view(0,-90)
+if sizeA > 2
+    %plotfn([1,sizeA],[1,sizeE],ally,enemy);
+    plotfn([1,sizeA],[1,sizeE],ally,enemy);
+    view(0,-90)
+end
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
@@ -38,12 +40,12 @@ xmax = sizeA;
 X = (xmax-xmin).*rand(N,D) + xmin;
 %%X = randi(xmax,N,D);
 m = X(:,1); n = X(:,2);
-%hold on
-%p = plot(m, n, "or");
-%hold off
-
-%p.XDataSource = 'm';
-%p.YDataSource = 'n';
+if sizeA > 2
+    hold on
+    p = plot(m, n, "ok");
+    p.XDataSource = 'm';
+    p.YDataSource = 'n';
+end
 
 %%% starting iterations
 while k<kmax
@@ -84,8 +86,11 @@ while k<kmax
                             fitness(i) = fitnessnew;
                             m = X(:,1); n = X(:,2);
                             %disp(m);disp(n);
-                            %refreshdata
-                            %drawnow
+                            if k == 1 && sizeA > 2
+                                refreshdata(p,'caller')
+                                drawnow
+                                legend(p,'侦查环节')
+                            end
                         end
                         if booth(X(i,1),X(i,2),ally,enemy)<lead
                             lead = booth(X(i,1),X(i,2),ally,enemy);
@@ -119,8 +124,11 @@ while k<kmax
                     X(moveable_wolves(i),1) = x1old + stepb * ((x1new-x1old)/abs(x1new-x1old));%disp(X(moveable_wolves(i),1));
                     X(moveable_wolves(i),2) = x2old + stepb * ((x2new-x2old)/abs(x2new-x2old));%disp(X(moveable_wolves(i),2));
                     m = X(:,1); n = X(:,2);
-                    %refreshdata
-                    %drawnow
+                    if k == 1 && sizeA > 2
+                        refreshdata(p,'caller')
+                        drawnow
+                        legend(p,'召唤环节')
+                    end
                     if booth(X(moveable_wolves(i),1), X(moveable_wolves(i),2),ally,enemy)<lead
                         lead = booth(X(moveable_wolves(i),1), X(moveable_wolves(i),2),ally,enemy);
                         idx_lead = moveable_wolves(i);
@@ -144,8 +152,11 @@ while k<kmax
                     if booth(x1new, x2new,ally,enemy)<booth(x1old, x2old,ally,enemy)
                         X(i,1) = x1new; X(i,2) = x2new;
                         m = X(:,1); n = X(:,2);
-                        %refreshdata
-                        %drawnow
+                        if k == 1 && sizeA > 2
+                            refreshdata(p,'caller')
+                            drawnow
+                            legend(p,'围攻环节')
+                        end
                         if booth(x1new, x2new,ally,enemy)<lead
                             lead = booth(x1new, x2new,ally,enemy);
                             idx_lead = i;
@@ -163,8 +174,11 @@ while k<kmax
                     X(idx_sorted(i),1) = X(idx_lead, 1) * (1+(0.2*rand-0.1));
                     X(idx_sorted(i),2) = X(idx_lead, 2) * (1+(0.2*rand-0.1));
                     m = X(:,1); n = X(:,2);
-                    %refreshdata
-                    %drawnow
+                    if k == 1 && sizeA > 2
+                        refreshdata(p,'caller')
+                        drawnow
+                        legend(p,'种群更新环节')
+                    end
             end
             overfl=1;
         end
@@ -178,17 +192,18 @@ m = X(:,1); n = X(:,2);
 %hold off
 %%% Plotting fitness over time
 
-%{
-figure;
-plot(best);
-hold on
-plot(worst); plot(avg);
-hold off
-ylim([0, 120])
-title("Best, worst and average fitness");
-xlabel("iterations","FontWeight", "bold"); ylabel("Fitness", "FontWeight", "bold");
-legend("Best", "Worst", "Average", "Location", "best");
-%}
+if sizeA > 2
+    figure;
+    plot(best);
+    hold on
+    plot(worst); plot(avg);
+    hold off
+    ylim([0, 50])
+    title("Best, worst and average fitness");
+    xlabel("迭代次数","FontWeight", "bold"); ylabel("最优程度(越小越好)", "FontWeight", "bold");
+    legend("最优", "最劣", "平均", "Location", "best");
+end
+
 
 [an1,an2] = min(booth(m,n,ally,enemy));
 %disp(an1);

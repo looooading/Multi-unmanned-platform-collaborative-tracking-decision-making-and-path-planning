@@ -43,7 +43,7 @@ function main()
 %%% 创建五个友军变量，每个变量包含两个随机数字位置信息。坐标范围是a、b之间。
     %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
     %不再使用随机生成方案 ally = 20 + (40-20).*rand(army_size, 3);
-    ally_x = 3.5 + (4 - 3.5).*rand(army_size,1);
+    ally_x = 3.7 + (4 - 3.7).*rand(army_size,1);
     ally_y = 2.5 + (4.5 - 2.5).*rand(army_size,1);
     ally = [ally_x ally_y];
     ally(:,3) = zeros(army_size,1);%友军同等价值
@@ -58,7 +58,7 @@ function main()
     %enemy = [Em1;Em2;Em3;Em4;Em5];%上述生成的敌人信息竖直叠放
     %Em1_pos = enemy(1,1:2);%enemy1的坐标信息是第一行前两个，之后依次为第二行前两个
     %不再使用随机生成方案 enemy = 10 + (49-10).*rand(army_size,3);
-    enemy_x = 6 + (9 - 6).*rand(army_size,1);
+    enemy_x = 6.5 + (8 - 6.5).*rand(army_size,1);
     enemy_y = 7 + (7.5 - 7).*rand(army_size,1);
     enemy = [enemy_x enemy_y];
     enemy(:,3) = rand(army_size,1);

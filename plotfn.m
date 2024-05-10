@@ -22,6 +22,6 @@ function plotfn(xlim, ylim,ally,enemy)
     plot3(ptsx1(fn_vals == min_val),ptsy(fn_vals == min_val), fn_vals(fn_vals == min_val), "xr");
     plot3(ptsx1(fn_vals == max_val),ptsy(fn_vals == max_val), fn_vals(fn_vals == max_val), "xg");
     title("f(x)");
-    xlabel("x","FontWeight", "bold"); ylabel("y", "FontWeight", "bold"); zlabel("f(x)", "FontWeight", "bold");
+    xlabel("友军编号","FontWeight", "bold"); ylabel("敌军编号", "FontWeight", "bold"); zlabel("匹配程度", "FontWeight", "bold");
     legend("function", "Min value", "Max value", "Location", "best");
 end
