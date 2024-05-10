@@ -168,7 +168,7 @@ while k<kmax
         elseif step==5
             % stronger surviving renewing 更强大的生存更新
             [sizeX,~] = size(X);
-            for s = 1:sizeX
+            for s = 1:sizeX %#1 通过重定位超出部分的狼解决索引报错问题
                 if X(s,1) > 3 || X(s,2) > 3 || X(s,1) < 1 || X(s,2) < 1
                     X(s,:) = [1,1];
                 end
