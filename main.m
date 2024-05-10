@@ -1,20 +1,48 @@
 function main()
 %%% 相关参数初始化
     disp(fileread('Marx_Engels_Lenin_ASCIIBanner.txt'));
-    map = single(zeros(500,500));
-    map(100:200,240:260) = 1;
-    map(300:400,240:260) = 1;
-    map(240:260,100:200) = 1;
-    map(240:260,300:400) = 1;
-    map(245:255,245:255) = 1;
+    map = single(zeros(100,100));
+
+    map(1:100,1:2) = 1;%边框
+    map(1:100,99:100) = 1;
+    map(1:2,1:100) = 1;
+    map(99:100,1:100) = 1;
+
+    map(10:80,48:52) = 1;%中心主干
+    map(48:52,10:80) = 1;
+
+    map(16:20,34:74) = 1;
+    map(34:74,16:20) = 1;
+
+    map(30:34,70:100) = 1;
+    map(70:100,30:34) = 1;
+
+    map(40:42,50:90) = 1;
+    map(50:90,40:42) = 1;
+
+    map(26:28,60:90) = 1;
+    map(60:90,26:28) = 1;
+
+    map(26:36,60:62) = 1;
+    map(60:62,26:36) = 1;
+
+    map(36:38,60:82) = 1;
+    map(60:82,36:38) = 1;
+
+    map(36:41,80:82) = 1;
+    map(80:82,36:41) = 1;
+
+
+    %map(100:200,50:200) = 0;%ally生成区域为零
+    %map(300:400,350:450) = 0;%enemy生成区域为零
     army_size = 3;%对称对抗，双方army_size相同
     decimal = 1;
 
 %%% 创建五个友军变量，每个变量包含两个随机数字位置信息。坐标范围是a、b之间。
     %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
     %不再使用随机生成方案 ally = 20 + (40-20).*rand(army_size, 3);
-    ally_x = 10 + (20 - 10).*rand(army_size,1);
-    ally_y = 5 + (20 - 5).*rand(army_size,1);
+    ally_x = 3.5 + (4.5 - 3.5).*rand(army_size,1);
+    ally_y = 3.5 + (4.5 - 3.5).*rand(army_size,1);
     ally = [ally_x ally_y];
     ally(:,3) = zeros(army_size,1);%友军同等价值
     ally = single(round(ally * 10^decimal)/10^decimal);%一位小数
@@ -28,8 +56,8 @@ function main()
     %enemy = [Em1;Em2;Em3;Em4;Em5];%上述生成的敌人信息竖直叠放
     %Em1_pos = enemy(1,1:2);%enemy1的坐标信息是第一行前两个，之后依次为第二行前两个
     %不再使用随机生成方案 enemy = 10 + (49-10).*rand(army_size,3);
-    enemy_x = 30 + (40 - 30).*rand(army_size,1);
-    enemy_y = 35 + (45 - 35).*rand(army_size,1);
+    enemy_x = 6 + (9 - 6).*rand(army_size,1);
+    enemy_y = 6 + (9 - 6).*rand(army_size,1);
     enemy = [enemy_x enemy_y];
     enemy(:,3) = rand(army_size,1);
     enemy = single(round(enemy * 10^decimal)/10^decimal);
@@ -71,6 +99,10 @@ function main()
     hold on;
     imagesc((map))
     colormap(flipud(gray))
+    ytick = linspace(0.5,99.5,100);%绘制网格图
+    xtick = linspace(0.5,99.5,100);
+    [x,y] = meshgrid(xtick,ytick);
+    plot(x,y,'k',y,x,'k');
     start = 1;
     for j = 1:army_size
         plot(OptimalPath(start,1),OptimalPath(start,2),'o','color','k')

@@ -23,7 +23,7 @@ function OptimalPath = A_star_1(ally_pos,enemy_pos,MAP)
     %Connecting_Distance=2-> Path can be alligned along 16 different direction.
     %ETC......
     
-    Connecting_Distance=2; %Avoid to high values Connecting_Distances for reasonable runtimes. 
+    Connecting_Distance=1; %Avoid to high values Connecting_Distances for reasonable runtimes. 
     % Running PathFinder
     OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance);
     % End. 
