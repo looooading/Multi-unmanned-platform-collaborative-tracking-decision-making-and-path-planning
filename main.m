@@ -1,5 +1,6 @@
 function main()
 %%% 相关参数初始化
+    clear all
     disp(fileread('Marx_Engels_Lenin_ASCIIBanner.txt'));
     map = single(zeros(100,100));
 
@@ -8,8 +9,11 @@ function main()
     map(1:2,1:100) = 1;
     map(99:100,1:100) = 1;
 
-    map(10:80,48:52) = 1;%中心主干
-    map(48:52,10:80) = 1;
+    map(10:70,48:52) = 1;%中心主干
+    map(48:52,10:70) = 1;
+
+    map(75:95,49:51) = 1;
+    map(49:51,75:95) = 1;
 
     map(16:20,34:74) = 1;
     map(34:74,16:20) = 1;
@@ -33,16 +37,14 @@ function main()
     map(80:82,36:41) = 1;
 
 
-    %map(100:200,50:200) = 0;%ally生成区域为零
-    %map(300:400,350:450) = 0;%enemy生成区域为零
     army_size = 3;%对称对抗，双方army_size相同
     decimal = 1;
 
 %%% 创建五个友军变量，每个变量包含两个随机数字位置信息。坐标范围是a、b之间。
     %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
     %不再使用随机生成方案 ally = 20 + (40-20).*rand(army_size, 3);
-    ally_x = 3.5 + (4.5 - 3.5).*rand(army_size,1);
-    ally_y = 3.5 + (4.5 - 3.5).*rand(army_size,1);
+    ally_x = 3.5 + (4 - 3.5).*rand(army_size,1);
+    ally_y = 2.5 + (4.5 - 2.5).*rand(army_size,1);
     ally = [ally_x ally_y];
     ally(:,3) = zeros(army_size,1);%友军同等价值
     ally = single(round(ally * 10^decimal)/10^decimal);%一位小数
@@ -57,7 +59,7 @@ function main()
     %Em1_pos = enemy(1,1:2);%enemy1的坐标信息是第一行前两个，之后依次为第二行前两个
     %不再使用随机生成方案 enemy = 10 + (49-10).*rand(army_size,3);
     enemy_x = 6 + (9 - 6).*rand(army_size,1);
-    enemy_y = 6 + (9 - 6).*rand(army_size,1);
+    enemy_y = 7 + (7.5 - 7).*rand(army_size,1);
     enemy = [enemy_x enemy_y];
     enemy(:,3) = rand(army_size,1);
     enemy = single(round(enemy * 10^decimal)/10^decimal);
@@ -102,13 +104,14 @@ function main()
     ytick = linspace(0.5,99.5,100);%绘制网格图
     xtick = linspace(0.5,99.5,100);
     [x,y] = meshgrid(xtick,ytick);
-    plot(x,y,'k',y,x,'k');
+    plot(x,y,'k',y,x,'k')
     start = 1;
     for j = 1:army_size
-        plot(OptimalPath(start,1),OptimalPath(start,2),'o','color','k')
-        plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color','b')
-        plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'r')
-        legend('Goal','Start','Path')
+        p1 = plot(OptimalPath(start,1),OptimalPath(start,2),'x','color',[0.3*j,0.1*j,0.1*j]);
+        p2 = plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color',[0.1*j,0.3*j,0.1*j]);
+        p3 = plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'color',[0.1*j,0.1*j,0.3*j]);
+        legend([p1 p2 p3],{'目标','起点','路径'})
         start = Path_size(j,1) + start;
     end
+    title('由暗到亮依次为不同路径')
 end
