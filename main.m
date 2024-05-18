@@ -1,7 +1,7 @@
-function main(status)
+function [map, OptimalPath, Path_size] = main(status)
 %%% 相关参数初始化
 
-
+    %YB = {};
     disp(fileread('Marx_Engels_Lenin_ASCIIBanner.txt'));
     map = single(zeros(100,100));
 
@@ -38,14 +38,14 @@ function main(status)
     map(80:82,36:41) = 1;
 
 
-    army_size = status(9);%对称对抗，双方army_size相同
+    army_size = status(1,9);%对称对抗，双方army_size相同
     decimal = 1;
 
 %%% 创建五个友军变量，每个变量包含两个随机数字位置信息。坐标范围是a、b之间。
     %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
     %不再使用随机生成方案 ally = 20 + (40-20).*rand(army_size, 3);
-    ally_x = status(2) * 0.1 + (status(1) * 0.1 - status(2) * 0.1).*rand(army_size,1);
-    ally_y = status(4) * 0.1 + (status(3) * 0.1 - status(4) * 0.1).*rand(army_size,1);
+    ally_x = status(1,2) * 0.1 + (status(1,1) * 0.1 - status(1,2) * 0.1).*rand(army_size,1);
+    ally_y = status(1,4) * 0.1 + (status(1,3) * 0.1 - status(1,4) * 0.1).*rand(army_size,1);
     ally = [ally_x ally_y];
     ally(:,3) = zeros(army_size,1);%友军同等价值
     ally = single(round(ally * 10^decimal)/10^decimal);%一位小数
@@ -55,8 +55,8 @@ function main(status)
     %al1 = ally(1, :);
 
     %创建5个敌人，包含坐标信息与价值信息
-    enemy_x = status(6) * 0.1 + (status(5) * 0.1 - status(6) * 0.1).*rand(army_size,1);
-    enemy_y = status(8) * 0.1 + (status(7) * 0.1 - status(8) * 0.1).*rand(army_size,1);
+    enemy_x = status(1,6) * 0.1 + (status(1,5) * 0.1 - status(1,6) * 0.1).*rand(army_size,1);
+    enemy_y = status(1,8) * 0.1 + (status(1,7) * 0.1 - status(1,8) * 0.1).*rand(army_size,1);
     enemy = [enemy_x enemy_y];
     enemy(:,3) = rand(army_size,1);
     enemy = single(round(enemy * 10^decimal)/10^decimal);
@@ -69,7 +69,7 @@ function main(status)
     OptimalPath = zeros(0,2);
     for i = 1:army_size
         %调用WPA
-        [name1,name2] = boothWPA(ally,enemy,army_size);
+        [name1,name2] = boothWPA(ally,enemy,army_size,status);
         posA = single(ally(name1,1:2));disp(posA);
         posE = single(enemy(name2,1:2));disp(posE);
 

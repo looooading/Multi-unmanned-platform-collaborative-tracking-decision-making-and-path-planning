@@ -1,4 +1,4 @@
-function [name1,name2] = boothWPA(ally,enemy,army_size)
+function [name1,name2] = boothWPA(ally,enemy,army_size,status)
 % Booth function
 %booth = @(x1,x2) (x1+2*x2-7).^2 + (2*x1+x2-5).^2;
 %booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
@@ -14,7 +14,7 @@ end
 
 %%% Wolf pack algorithm parameters initialization
 % number of wolfs
-N = 40;
+N = status(1,10);
 % number of dimensions 尺寸数
 D = 2;
 % maximum number of iterations 最大迭代次数
@@ -22,7 +22,7 @@ kmax = 5; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
-Lnear = 0.1; %0.08
+Lnear = 0.3; %0.08
 % max number of  iterations in scouting behaviour 侦察行为的最大迭代次数
 Tmax = 12; T=0;
 % population renewing proportional constant 种群更新比例系数
@@ -169,9 +169,9 @@ while k<kmax
             % stronger surviving renewing 更强大的生存更新
             [sizeX,~] = size(X);
             for s = 1:sizeX %#1 通过重定位超出部分的狼解决索引报错问题
-                if X(s,1) > sizeA || X(s,2) > sizeA || X(s,1) < 1 || X(s,2) < 1
-                    [~,xxx2] = min(booth(m,n,ally,enemy));
-                    X(s,:) = [X(xxx2,1),X(xxx2,2)];
+                %[~,xxx2] = min(booth(m,n,ally,enemy));
+                if X(s,1) >= sizeA || X(s,2) >= sizeA || X(s,1) <= 1 || X(s,2) <= 1
+                    X(s,:) = (xmax-xmin).*rand(1,2) + xmin;
                 end
             end
             fitness = booth(X(:,1),X(:,2),ally,enemy);
@@ -193,6 +193,7 @@ while k<kmax
     k = k + 1;
     fprintf("iteration: %d\n", k)
 end
+%{
 if sizeA > (army_size - 1)
     m = X(:,1); n = X(:,2);
     hold on
@@ -200,6 +201,7 @@ if sizeA > (army_size - 1)
     legend(result,"最终狼群位置")
     hold off
 end
+%}
 %%% Plotting fitness over time
 
 if sizeA > (army_size - 1)
