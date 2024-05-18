@@ -1,4 +1,4 @@
-function [name1,name2] = boothWPA(ally,enemy)
+function [name1,name2] = boothWPA(ally,enemy,army_size)
 % Booth function
 %booth = @(x1,x2) (x1+2*x2-7).^2 + (2*x1+x2-5).^2;
 %booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
@@ -6,7 +6,7 @@ function [name1,name2] = boothWPA(ally,enemy)
 %disp(enemy);
 [sizeA,~] = size(ally);
 [sizeE,~] = size(enemy);
-if sizeA > 2
+if sizeA > (army_size - 1)
     %plotfn([1,sizeA],[1,sizeE],ally,enemy);
     plotfn([1,sizeA],[1,sizeE],ally,enemy);
     view(0,-90)
@@ -22,10 +22,10 @@ kmax = 5; k=1;
 % step coefficient 步长系数
 S = 0.12;
 % Distance determinant coefficient 距离决定因素系数
-Lnear = 0.3; %0.08
+Lnear = 0.1; %0.08
 % max number of  iterations in scouting behaviour 侦察行为的最大迭代次数
 Tmax = 12; T=0;
-% population renewing proportional constant 人口更新比例常数
+% population renewing proportional constant 种群更新比例系数
 beta = 2;
 % steps 步长
 stepa = S; stepb = 2.5*S; stepc = S/2;
@@ -40,7 +40,7 @@ xmax = sizeA;
 X = (xmax-xmin).*rand(N,D) + xmin;
 %%X = randi(xmax,N,D);
 m = X(:,1); n = X(:,2);
-if sizeA > 2
+if sizeA > (army_size - 1)
     hold on
     p = plot(m, n, "ok");
     p.XDataSource = 'm';
@@ -86,7 +86,7 @@ while k<kmax
                             fitness(i) = fitnessnew;
                             m = X(:,1); n = X(:,2);
                             %disp(m);disp(n);
-                            if k == 1 && sizeA > 2
+                            if k == 1 && sizeA > (army_size - 1)
                                 refreshdata(p,'caller')
                                 drawnow
                                 legend(p,'侦查环节的狼群位置')
@@ -124,7 +124,7 @@ while k<kmax
                     X(moveable_wolves(i),1) = x1old + stepb * ((x1new-x1old)/abs(x1new-x1old));%disp(X(moveable_wolves(i),1));
                     X(moveable_wolves(i),2) = x2old + stepb * ((x2new-x2old)/abs(x2new-x2old));%disp(X(moveable_wolves(i),2));
                     m = X(:,1); n = X(:,2);
-                    if k == 1 && sizeA > 2
+                    if k == 1 && sizeA > (army_size - 1)
                         refreshdata(p,'caller')
                         drawnow
                         legend(p,'召唤环节的狼群位置')
@@ -152,7 +152,7 @@ while k<kmax
                     if booth(x1new, x2new,ally,enemy)<booth(x1old, x2old,ally,enemy)
                         X(i,1) = x1new; X(i,2) = x2new;
                         m = X(:,1); n = X(:,2);
-                        if k == 1 && sizeA > 2
+                        if k == 1 && sizeA > (army_size - 1)
                             refreshdata(p,'caller')
                             drawnow
                             legend(p,'围攻环节的狼群位置')
@@ -169,8 +169,9 @@ while k<kmax
             % stronger surviving renewing 更强大的生存更新
             [sizeX,~] = size(X);
             for s = 1:sizeX %#1 通过重定位超出部分的狼解决索引报错问题
-                if X(s,1) > 3 || X(s,2) > 3 || X(s,1) < 1 || X(s,2) < 1
-                    X(s,:) = [1,1];
+                if X(s,1) > sizeA || X(s,2) > sizeA || X(s,1) < 1 || X(s,2) < 1
+                    [~,xxx2] = min(booth(m,n,ally,enemy));
+                    X(s,:) = [X(xxx2,1),X(xxx2,2)];
                 end
             end
             fitness = booth(X(:,1),X(:,2),ally,enemy);
@@ -180,7 +181,7 @@ while k<kmax
                     X(idx_sorted(i),1) = X(idx_lead, 1) * (1+(0.2*rand-0.1));
                     X(idx_sorted(i),2) = X(idx_lead, 2) * (1+(0.2*rand-0.1));
                     m = X(:,1); n = X(:,2);
-                    if k == 1 && sizeA > 2
+                    if k == 1 && sizeA > (army_size - 1)
                         refreshdata(p,'caller')
                         drawnow
                         legend(p,'种群更新环节的狼群位置')
@@ -192,7 +193,7 @@ while k<kmax
     k = k + 1;
     fprintf("iteration: %d\n", k)
 end
-if sizeA > 2
+if sizeA > (army_size - 1)
     m = X(:,1); n = X(:,2);
     hold on
     result = plot(m, n, "^b");
@@ -201,16 +202,16 @@ if sizeA > 2
 end
 %%% Plotting fitness over time
 
-if sizeA > 2
+if sizeA > (army_size - 1)
     figure
-    plot(best);
+    plot(best,'k');
     hold on
-    plot(worst); plot(avg);
+    plot(worst,'k--'); plot(avg,'k:');plot([max(worst)+1.2*army_size,max(worst)+1.2*army_size,max(worst)+1.2*army_size,max(worst)+1.2*army_size],'k-.');
     hold off
     ylim([0, 50])
     title("Best, worst and average fitness");
     xlabel("迭代次数","FontWeight", "bold"); ylabel("最优程度(越小越好)", "FontWeight", "bold");
-    legend("最优", "最劣", "平均", "Location", "best");
+    legend("最优", "最劣", "平均", "未优化的默认组合","Location", "best");
 end
 
 

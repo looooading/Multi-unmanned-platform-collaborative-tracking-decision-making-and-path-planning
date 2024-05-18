@@ -1,6 +1,7 @@
-function main()
+function main(status)
 %%% 相关参数初始化
-    clear all
+
+
     disp(fileread('Marx_Engels_Lenin_ASCIIBanner.txt'));
     map = single(zeros(100,100));
 
@@ -37,14 +38,14 @@ function main()
     map(80:82,36:41) = 1;
 
 
-    army_size = 3;%对称对抗，双方army_size相同
+    army_size = status(9);%对称对抗，双方army_size相同
     decimal = 1;
 
 %%% 创建五个友军变量，每个变量包含两个随机数字位置信息。坐标范围是a、b之间。
     %公式 r = a + (b-a).*rand(N,1) 生成区间 (a,b) 内的 N 个随机数。
     %不再使用随机生成方案 ally = 20 + (40-20).*rand(army_size, 3);
-    ally_x = 3.7 + (4 - 3.7).*rand(army_size,1);
-    ally_y = 2.5 + (4.5 - 2.5).*rand(army_size,1);
+    ally_x = status(2) * 0.1 + (status(1) * 0.1 - status(2) * 0.1).*rand(army_size,1);
+    ally_y = status(4) * 0.1 + (status(3) * 0.1 - status(4) * 0.1).*rand(army_size,1);
     ally = [ally_x ally_y];
     ally(:,3) = zeros(army_size,1);%友军同等价值
     ally = single(round(ally * 10^decimal)/10^decimal);%一位小数
@@ -54,12 +55,8 @@ function main()
     %al1 = ally(1, :);
 
     %创建5个敌人，包含坐标信息与价值信息
-    %Em1 = [0.1,0.1,0.1];Em2 = [-0.1,0.1,0.2];Em3 = [-0.1,-0.1,0.1];Em4 = [0.1,-0.1,0.2];Em5 = [0,0,0.3];
-    %enemy = [Em1;Em2;Em3;Em4;Em5];%上述生成的敌人信息竖直叠放
-    %Em1_pos = enemy(1,1:2);%enemy1的坐标信息是第一行前两个，之后依次为第二行前两个
-    %不再使用随机生成方案 enemy = 10 + (49-10).*rand(army_size,3);
-    enemy_x = 6.5 + (8 - 6.5).*rand(army_size,1);
-    enemy_y = 7 + (7.5 - 7).*rand(army_size,1);
+    enemy_x = status(6) * 0.1 + (status(5) * 0.1 - status(6) * 0.1).*rand(army_size,1);
+    enemy_y = status(8) * 0.1 + (status(7) * 0.1 - status(8) * 0.1).*rand(army_size,1);
     enemy = [enemy_x enemy_y];
     enemy(:,3) = rand(army_size,1);
     enemy = single(round(enemy * 10^decimal)/10^decimal);
@@ -72,7 +69,7 @@ function main()
     OptimalPath = zeros(0,2);
     for i = 1:army_size
         %调用WPA
-        [name1,name2] = boothWPA(ally,enemy);
+        [name1,name2] = boothWPA(ally,enemy,army_size);
         posA = single(ally(name1,1:2));disp(posA);
         posE = single(enemy(name2,1:2));disp(posE);
 
@@ -107,9 +104,9 @@ function main()
     plot(x,y,'k',y,x,'k')
     start = 1;
     for j = 1:army_size
-        p1 = plot(OptimalPath(start,1),OptimalPath(start,2),'x','color',[0.3*j,0.1*j,0.1*j]);
-        p2 = plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color',[0.1*j,0.3*j,0.1*j]);
-        p3 = plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'color',[0.1*j,0.1*j,0.3*j]);
+        p1 = plot(OptimalPath(start,1),OptimalPath(start,2),'x','color',[(1/army_size)*j,0.1*j,0.1*j]);
+        p2 = plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color',[0.1*j,(1/army_size)*j,0.1*j]);
+        p3 = plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'color',[0.1*j,0.1*j,(1/army_size)*j]);
         legend([p1 p2 p3],{'目标','起点','路径'})
         start = Path_size(j,1) + start;
     end

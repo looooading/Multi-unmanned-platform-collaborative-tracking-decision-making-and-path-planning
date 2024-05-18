@@ -17,14 +17,9 @@ function OptimalPath = A_star_1(ally_pos,enemy_pos,MAP)
     GoalRegister = single(zeros(map_x_size,map_y_size));
     GoalRegister(enemy_pos(1,1),enemy_pos(1,2))=1;
     
-    %Number of Neighboors one wants to investigate from each cell. A larger
-    %number of nodes means that the path can be alligned in more directions. 
-    %Connecting_Distance=1-> Path can  be alligned along 8 different direction.
-    %Connecting_Distance=2-> Path can be alligned along 16 different direction.
-    %ETC......
     
-    Connecting_Distance=1; %Avoid to high values Connecting_Distances for reasonable runtimes. 
-    % Running PathFinder
+    Connecting_Distance=1;  
+
     OptimalPath = ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance);
     % End. 
     %figure(10)
@@ -50,18 +45,11 @@ end
 
 
 function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distance)
-    %Version 1.0
-    % By Einar Ueland 2nd of May, 2016
     
-    %FINDING ASTAR PATH IN AN OCCUPANCY GRID
-    
-    
-    %nNeighboor=3;
-    % Preallocation of Matrices
     [Height,Width]=size(MAP); %Height and width of matrix
     GScore=zeros(Height,Width);           %Matrix keeping track of G-scores 
     FScore=single(inf(Height,Width));     %Matrix keeping track of F-scores (only open list) 
-    Hn=single(zeros(Height,Width));       %Heuristic matrix
+    Hn=single(zeros(Height,Width));       %启发式矩阵 Heuristic matrix
     OpenMAT=single(zeros(Height,Width));    %Matrix keeping of open grid cells
     ClosedMAT=single(zeros(Height,Width));  %Matrix keeping track of closed grid cells
     ClosedMAT(MAP==1)=1;                  %Adding object-cells to closed matrix
@@ -74,14 +62,14 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
     Dummy=2*Connecting_Distance+2;
     Mid=Connecting_Distance+1;
     for i=1:Connecting_Distance-1
-    NeighboorCheck(i,i)=0;
-    NeighboorCheck(Dummy-i,i)=0;
-    NeighboorCheck(i,Dummy-i)=0;
-    NeighboorCheck(Dummy-i,Dummy-i)=0;
-    NeighboorCheck(Mid,i)=0;
-    NeighboorCheck(Mid,Dummy-i)=0;
-    NeighboorCheck(i,Mid)=0;
-    NeighboorCheck(Dummy-i,Mid)=0;
+        NeighboorCheck(i,i)=0;
+        NeighboorCheck(Dummy-i,i)=0;
+        NeighboorCheck(i,Dummy-i)=0;
+        NeighboorCheck(Dummy-i,Dummy-i)=0;
+        NeighboorCheck(Mid,i)=0;
+        NeighboorCheck(Mid,Dummy-i)=0;
+        NeighboorCheck(i,Mid)=0;
+        NeighboorCheck(Dummy-i,Mid)=0;
     end
     NeighboorCheck(Mid,Mid)=0;
     
@@ -91,12 +79,12 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
     %%% End of setting up matrices representing neighboors to be investigated
     
     
-    %%%%%%%%% Creating Heuristic-matrix based on distance to nearest  goal node
+    %%%%%%%%% 根据到最近目标节点的距离创建启发式矩阵 Creating Heuristic-matrix based on distance to nearest  goal node
     [col, row]=find(GoalRegister==1);
     RegisteredGoals=[row col];
     Nodesfound=size(RegisteredGoals,1);
     
-    for k=1:size(GoalRegister,1)
+    for k=1:size(GoalRegister,1) %每个元素到最近的一个目标点的距离，即预估代价
         for j=1:size(GoalRegister,2)
             if MAP(k,j)==0
                 Mat=RegisteredGoals-(repmat([j k],(Nodesfound),1));
@@ -105,18 +93,16 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
             end
         end
     end
-    %End of creating Heuristic-matrix. 
     
-    %Note: If Hn values is set to zero the method will reduce to the Dijkstras method.
     
     %Initializign start node with FValue and opening first node.
-    FScore(StartY,StartX)=Hn(StartY,StartX);         
-    OpenMAT(StartY,StartX)=1;   
+    FScore(StartY,StartX)=Hn(StartY,StartX);
+    OpenMAT(StartY,StartX)=1;
     
     
     
     
-    while 1==1 %Code will break when path found or when no path exist
+    while 1 %Code will break when path found or when no path exist
         MINopenFSCORE=min(min(FScore));
         if MINopenFSCORE==inf
         %Failuere!
@@ -152,15 +138,15 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
                     for K=1:JumpCells;
                         YPOS=round(K*i/JumpCells);
                         XPOS=round(K*j/JumpCells);
-                
+                        
                         if (MAP(CurrentY+YPOS,CurrentX+XPOS)==1)
                             Flag=0;
                         end
                     end
                 end
                 %End of  checking that the path does not pass an object
-    
-                if Flag==1           
+                
+                if Flag==1
                     tentative_gScore = GScore(CurrentY,CurrentX) + sqrt(i^2+j^2);
                     if OpenMAT(CurrentY+i,CurrentX+j)==0
                         OpenMAT(CurrentY+i,CurrentX+j)=1;                    
@@ -169,8 +155,8 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
                     end
                     ParentX(CurrentY+i,CurrentX+j)=CurrentX;
                     ParentY(CurrentY+i,CurrentX+j)=CurrentY;
-                    GScore(CurrentY+i,CurrentX+j)=tentative_gScore;
-                    FScore(CurrentY+i,CurrentX+j)= tentative_gScore+Hn(CurrentY+i,CurrentX+j);
+                    GScore(CurrentY+i,CurrentX+j)=tentative_gScore;%实际代价
+                    FScore(CurrentY+i,CurrentX+j)= tentative_gScore+Hn(CurrentY+i,CurrentX+j);%实际代价与预估代价
                 end
             end
         end
@@ -178,7 +164,7 @@ function OptimalPath=ASTARPATH(StartX,StartY,MAP,GoalRegister,Connecting_Distanc
     
     k=2;
     if RECONSTRUCTPATH
-        OptimalPath(1,:)=[CurrentY CurrentX];
+        OptimalPath(1,:)=[CurrentY CurrentX]; %沿着父节点找到路径结果
         while RECONSTRUCTPATH
             CurrentXDummy=ParentX(CurrentY,CurrentX);
             CurrentY=ParentY(CurrentY,CurrentX);
