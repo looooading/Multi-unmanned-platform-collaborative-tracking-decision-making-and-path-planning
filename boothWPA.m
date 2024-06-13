@@ -1,13 +1,10 @@
 function [name1,name2] = boothWPA(ally,enemy,army_size,status)
-% Booth function
-%booth = @(x1,x2) (x1+2*x2-7).^2 + (2*x1+x2-5).^2;
-%booth = @(i,a) norm(ally(i,:),enemy(a,:)) - (ally(i,3) - enemy(a,3));
 %disp(ally);
 %disp(enemy);
 [sizeA,~] = size(ally);
 [sizeE,~] = size(enemy);
 if sizeA > (army_size - 1)
-    %plotfn([1,sizeA],[1,sizeE],ally,enemy);
+    plotfn([1,sizeA],[1,sizeE],ally,enemy);
     plotfn([1,sizeA],[1,sizeE],ally,enemy);
     view(0,-90)
 end

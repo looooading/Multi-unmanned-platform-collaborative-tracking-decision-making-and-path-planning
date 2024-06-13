@@ -288,7 +288,7 @@ function [map1, OptimalPath, Path_size] = main(status)
     for j = 1:army_size
         p1 = plot(OptimalPath(start,1),OptimalPath(start,2),'x','color',[(1/army_size)*j,0.1*j,0.1*j]);
         p2 = plot(OptimalPath((start - 1) + Path_size(j,1),1),OptimalPath((start - 1) + Path_size(j,1),2),'^','color',[0.1*j,(1/army_size)*j,0.1*j]);
-        p3 = plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'color',[0.1*j,0.1*j,(1/army_size)*j]);
+        p3 = plot(OptimalPath(start:(start - 1) + Path_size(j,1),1),OptimalPath(start:(start - 1) + Path_size(j,1),2),'color',[0.1*j,0.1*j,(1/army_size)*j],'LineWidth',1.5);
         legend([p1 p2 p3],{'目标','起点','路径'})
         start = Path_size(j,1) + start;
     end
